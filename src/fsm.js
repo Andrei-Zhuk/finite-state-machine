@@ -7,6 +7,8 @@ class FSM {
         this._initial = config.initial;
         this._states = config.states;
         this._current = this._initial;
+        this._history = [];
+        this._history.push(this._initial);
     }
 
     /**
@@ -26,6 +28,7 @@ class FSM {
         for (var i = 0; i < states.length; i++) {
             if (states[i] == state) {
                 this._current = state;
+                this._history.push(state);
                 return this;
             }
         };
@@ -41,6 +44,7 @@ class FSM {
         for (var key in state.transitions) {
             if (key == event) {
                 this._current = state.transitions[key];
+                this._history.push(state.transitions[key]);
                 return this;
             }
         }
@@ -83,7 +87,13 @@ class FSM {
      * Returns false if undo is not available.
      * @returns {Boolean}
      */
-    undo() {}
+    undo() {
+        if (this._current == this._initial) {
+            return false;
+        };
+        this._current = this._history[this._history.length - 2];
+        return true;
+    }
 
     /**
      * Goes redo to state.
