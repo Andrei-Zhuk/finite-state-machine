@@ -3,19 +3,27 @@ class FSM {
      * Creates new FSM instance.
      * @param config
      */
-    constructor(config) {}
+    constructor(config) {
+        this._initial = config.initial;
+        this._states = config.states;
+        this._current = this._initial;
+    }
 
     /**
      * Returns active state.
      * @returns {String}
      */
-    getState() {}
+    getState() {
+        return this._current
+    }
 
     /**
      * Goes to specified state.
      * @param state
      */
-    changeState(state) {}
+    changeState(state) {
+        this._current = state;
+}
 
     /**
      * Changes state according to event transition rules.
@@ -55,6 +63,7 @@ class FSM {
      */
     clearHistory() {}
 }
+
 
 module.exports = FSM;
 
