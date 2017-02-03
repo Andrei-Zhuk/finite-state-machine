@@ -60,7 +60,23 @@ class FSM {
      * @param event
      * @returns {Array}
      */
-    getStates(event) {}
+    getStates(event) {
+        var states = [];
+        if (arguments.length == 0) {
+            for (var key in this._states) {
+                states.push(key);
+            };
+            return states;
+        };
+        for(var key in this._states) {
+            for (var keys in this._states[key].transitions) {
+                if (keys == event) {
+                    states.push(key)
+                }
+            }
+        };
+        return states;
+    }
 
     /**
      * Goes back to previous state.
