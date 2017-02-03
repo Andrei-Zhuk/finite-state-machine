@@ -14,7 +14,7 @@ class FSM {
      * @returns {String}
      */
     getState() {
-        return this._current
+        return this._current;
     }
 
     /**
@@ -22,19 +22,37 @@ class FSM {
      * @param state
      */
     changeState(state) {
-        this._current = state;
+        var states = Object.keys(this._states);
+        for (var i = 0; i < states.length; i++) {
+            if (states[i] == state) {
+                this._current = state;
+                return this;
+            }
+        };
+        throw new Error();
 }
 
     /**
      * Changes state according to event transition rules.
      * @param event
      */
-    trigger(event) {}
+    trigger(event) {
+        var state = this._states[this._current];
+        for (var key in state.transitions) {
+            if (key == event) {
+                this._current = state.transitions[key];
+                return this;
+            }
+        }
+        throw new Error()
+    }
 
     /**
      * Resets FSM state to initial.
      */
-    reset() {}
+    reset() {
+        this._current = this._initial;
+    }
 
     /**
      * Returns an array of states for which there are specified event transition rules.
