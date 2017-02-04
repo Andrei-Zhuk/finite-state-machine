@@ -9,6 +9,7 @@ class FSM {
         this._current = this._initial;
         this._history = [];
         this._history.push(this._initial);
+        this._undoHistory = [];
     }
 
     /**
@@ -91,7 +92,16 @@ class FSM {
         if (this._current == this._initial) {
             return false;
         };
+        if (this._history.length == 0) {
+            return false;
+        };
+        // alert(this._current+' current');
+        this._undoHistory.push(this._current);
+        // alert(this._undoHistory+' undoHistory');
+        // alert(this._history+'        history');
         this._current = this._history[this._history.length - 2];
+        this._history.pop();
+        // alert(this._history+'        history');
         return true;
     }
 
@@ -100,15 +110,26 @@ class FSM {
      * Returns false if redo is not available.
      * @returns {Boolean}
      */
-    redo() {}
+    redo() {
+        if (this._current == this._initial && this._undoHistory.length == 0) {
+            return false;
+        };
+        if (this._history.length == 0) {
+            return false;
+        };
+        this._current = this._undoHistory[this._undoHistory.length - 1];
+        this._history.push(this._current);
+        this._undoHistory.pop();
+        return true;
+    }
 
     /**
      * Clears transition history
      */
-    clearHistory() {}
+    clearHistory() {
+        this._history = [];
+    }
 }
-
-
 module.exports = FSM;
 
 /** @Created by Uladzimir Halushka **/
