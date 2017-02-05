@@ -10,6 +10,7 @@ class FSM {
         this._history = [];
         this._history.push(this._initial);
         this._undoHistory = [];
+        this._count = 0;
     }
 
     /**
@@ -46,6 +47,7 @@ class FSM {
             if (key == event) {
                 this._current = state.transitions[key];
                 this._history.push(state.transitions[key]);
+                this._count++;
                 return this;
             }
         }
@@ -95,13 +97,10 @@ class FSM {
         if (this._history.length == 0) {
             return false;
         };
-        // alert(this._current+' current');
         this._undoHistory.push(this._current);
-        // alert(this._undoHistory+' undoHistory');
-        // alert(this._history+'        history');
         this._current = this._history[this._history.length - 2];
         this._history.pop();
-        // alert(this._history+'        history');
+        this._count = 0;
         return true;
     }
 
@@ -114,9 +113,15 @@ class FSM {
         if (this._current == this._initial && this._undoHistory.length == 0) {
             return false;
         };
+        if (this._undoHistory.length == 0) {
+            return false
+        };
         if (this._history.length == 0) {
             return false;
         };
+        if(this._count > 0) {
+            return false;
+        }
         this._current = this._undoHistory[this._undoHistory.length - 1];
         this._history.push(this._current);
         this._undoHistory.pop();
